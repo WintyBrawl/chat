@@ -200,12 +200,6 @@
             background: linear-gradient(to bottom, #C8E6C9, #81C784);
         }
 
-        .emoji-btn {
-            background-color: #FFB74D;
-            color: #000;
-            width: 50px;
-        }
-
         .login-input {
             width: 100%;
             margin-bottom: 10px;
@@ -221,8 +215,8 @@
             padding: 12px;
         }
 
-        .logout-btn {
-            background: linear-gradient(to bottom, #F44336, #D32F2F);
+        .delete-account-btn {
+            background: linear-gradient(to bottom, #D32F2F, #B71C1C);
             color: white;
             font-weight: bold;
             border: 1px solid #C62828;
@@ -402,18 +396,111 @@
             margin-left: 5px;
         }
         
-        .auto-login-btn {
-            background: linear-gradient(to bottom, #FF9800, #F57C00);
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
             color: white;
-            font-size: 11px;
-            padding: 4px 8px;
-            margin-top: 5px;
-            width: 100%;
-            border-radius: 3px;
+            font-size: 18px;
+        }
+        
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        
+        .confirmation-box {
+            background-color: #FFF;
+            border: 2px solid #D32F2F;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .confirmation-title {
+            color: #D32F2F;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .confirmation-text {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .confirm-btn {
+            flex: 1;
+            background: linear-gradient(to bottom, #D32F2F, #B71C1C);
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .cancel-btn {
+            flex: 1;
+            background: linear-gradient(to bottom, #757575, #616161);
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div>Загрузка мессенджера...</div>
+    </div>
+    
+    <div id="confirmationModal" class="confirmation-modal" style="display: none;">
+        <div class="confirmation-box">
+            <div class="confirmation-title">Удаление аккаунта</div>
+            <div class="confirmation-text">
+                Вы точно хотите удалить аккаунт?<br>
+                <span style="color: #D32F2F; font-weight: bold;">Это действие нельзя отменить!</span><br><br>
+                Будут удалены:
+                <ul style="text-align: left; margin: 10px 0 10px 20px;">
+                    <li>Ваш профиль</li>
+                    <li>Все ваши контакты</li>
+                    <li>Вся история сообщений</li>
+                </ul>
+            </div>
+            <div class="confirmation-buttons">
+                <button id="confirmDeleteBtn" class="confirm-btn">Да, удалить аккаунт</button>
+                <button id="cancelDeleteBtn" class="cancel-btn">Отмена</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="container">
         <div class="header">
             <h1>Личный Мессенджер</h1>
@@ -426,12 +513,6 @@
                     <div class="window-title">Вход в мессенджер</div>
                     <input type="text" id="usernameInput" class="login-input" placeholder="Введите ваше имя" maxlength="20">
                     <button id="loginBtn" class="login-btn">Войти</button>
-                    <div id="savedUserInfo" style="display: none; margin-top: 10px; padding: 10px; background-color: #FFF; border-radius: 5px; border: 1px solid #A5D6A7;">
-                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Сохраненный пользователь:</div>
-                        <div style="font-weight: bold;" id="savedUserName"></div>
-                        <div style="font-size: 11px; color: #888;" id="savedUserId"></div>
-                        <button id="autoLoginBtn" class="auto-login-btn">Войти под этим именем</button>
-                    </div>
                 </div>
                 
                 <div class="user-panel" id="userPanel" style="display: none;">
@@ -455,7 +536,7 @@
                         </div>
                     </div>
                     
-                    <button id="logoutBtn" class="logout-btn">Выйти</button>
+                    <button id="deleteAccountBtn" class="delete-account-btn">Удалить аккаунт</button>
                 </div>
             </div>
             
@@ -502,7 +583,7 @@
         const userPanel = document.getElementById('userPanel');
         const usernameInput = document.getElementById('usernameInput');
         const loginBtn = document.getElementById('loginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
+        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
         const currentUserName = document.getElementById('currentUserName');
         const currentUserId = document.getElementById('currentUserId');
         const copyIdBtn = document.getElementById('copyIdBtn');
@@ -513,10 +594,10 @@
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
         const notification = document.getElementById('notification');
-        const savedUserInfo = document.getElementById('savedUserInfo');
-        const savedUserName = document.getElementById('savedUserName');
-        const savedUserId = document.getElementById('savedUserId');
-        const autoLoginBtn = document.getElementById('autoLoginBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
         
         let currentUser = null;
         let myUserId = null;
@@ -540,20 +621,111 @@
         
         // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', () => {
-            checkSavedUser();
-            usernameInput.focus();
+            showLoading();
+            autoLogin();
         });
         
-        // Проверить сохраненного пользователя
-        function checkSavedUser() {
+        // Показать загрузку
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+        
+        // Скрыть загрузку
+        function hideLoading() {
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+            }, 500);
+        }
+        
+        // Автоматический вход при загрузке
+        function autoLogin() {
             const savedId = localStorage.getItem(STORAGE_KEYS.USER_ID);
             const savedName = localStorage.getItem(STORAGE_KEYS.USER_NAME);
             
             if (savedId && savedName) {
-                savedUserName.textContent = savedName;
-                savedUserId.textContent = `ID: ${savedId}`;
-                savedUserInfo.style.display = 'block';
+                // Есть сохраненный аккаунт - выполняем автоматический вход
+                performAutoLogin(savedName, savedId);
+            } else {
+                // Нет сохраненного аккаунта - показываем форму входа
+                hideLoading();
+                showLoginForm();
             }
+        }
+        
+        // Выполнить автоматический вход
+        function performAutoLogin(username, userId) {
+            currentUser = username;
+            myUserId = userId;
+            
+            // Проверить существование пользователя в Firebase
+            database.ref(`users/${myUserId}`).once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    // Пользователь существует в Firebase
+                    loginUserDirectly(username, userId);
+                } else {
+                    // Пользователя нет в Firebase, но есть в LocalStorage
+                    // Создаем нового с тем же ID и именем
+                    createNewUserWithExistingId(username, userId);
+                }
+            }).catch(error => {
+                console.error('Ошибка проверки пользователя в Firebase:', error);
+                // При ошибке все равно создаем пользователя
+                createNewUserWithExistingId(username, userId);
+            });
+        }
+        
+        // Создать нового пользователя с существующим ID
+        function createNewUserWithExistingId(username, userId) {
+            currentUser = username;
+            myUserId = userId;
+            
+            // Сохранить пользователя в Firebase
+            saveUserToFirebase();
+            
+            // Показать интерфейс мессенджера
+            showMessengerInterface();
+            hideLoading();
+            
+            // Загрузить контакты
+            loadContacts();
+            
+            showNotification(`Добро пожаловать обратно, ${username}!`);
+        }
+        
+        // Прямой вход пользователя
+        function loginUserDirectly(username, userId) {
+            currentUser = username;
+            myUserId = userId;
+            
+            myUserData = {
+                username: currentUser,
+                userId: myUserId,
+                lastSeen: Date.now()
+            };
+            
+            // Обновить время последней активности
+            database.ref(`users/${myUserId}/lastSeen`).set(Date.now());
+            
+            // Показать интерфейс мессенджера
+            showMessengerInterface();
+            hideLoading();
+            
+            // Загрузить контакты
+            loadContacts();
+            
+            showNotification(`Добро пожаловать обратно, ${username}!`);
+            
+            // Обновлять время последней активности каждую минуту
+            setInterval(() => {
+                if (myUserData) {
+                    database.ref(`users/${myUserId}/lastSeen`).set(Date.now());
+                }
+            }, 60000);
+        }
+        
+        // Показать форму входа
+        function showLoginForm() {
+            usernameInput.focus();
         }
         
         // Вход в систему
@@ -567,91 +739,150 @@
             loginUser(username);
         });
         
-        // Автоматический вход
-        autoLoginBtn.addEventListener('click', () => {
-            const savedName = localStorage.getItem(STORAGE_KEYS.USER_NAME);
-            if (savedName) {
-                loginUser(savedName, true);
-            }
-        });
-        
-        // Функция входа пользователя
-        function loginUser(username, useSavedId = false) {
-            currentUser = username;
+        // Функция входа пользователя (новая регистрация)
+        function loginUser(username) {
+            showLoading();
             
-            if (useSavedId) {
-                // Используем сохраненный ID
-                myUserId = localStorage.getItem(STORAGE_KEYS.USER_ID);
-                if (!myUserId) {
-                    myUserId = generateShortId();
-                }
-            } else {
-                // Генерируем новый ID
-                myUserId = generateShortId();
-            }
+            currentUser = username;
+            myUserId = generateShortId();
             
             // Сохранить данные в LocalStorage
             saveUserToLocalStorage();
             
-            // Показать панель пользователя
+            // Сохранить пользователя в Firebase
+            saveUserToFirebase();
+            
+            // Показать интерфейс мессенджера
+            showMessengerInterface();
+            hideLoading();
+            
+            // Загрузить контакты
+            loadContacts();
+            
+            showNotification(`Добро пожаловать, ${username}!`);
+        }
+        
+        // Показать интерфейс мессенджера
+        function showMessengerInterface() {
             loginPanel.style.display = 'none';
             userPanel.style.display = 'flex';
             userPanel.style.flexDirection = 'column';
             
             currentUserName.textContent = currentUser;
             currentUserId.textContent = myUserId;
-            
-            // Сохранить пользователя в Firebase
-            saveUserToFirebase();
-            
-            // Загрузить контакты
-            loadContacts();
         }
         
-        // Выход из системы
-        logoutBtn.addEventListener('click', () => {
-            if (confirm('Вы действительно хотите выйти из мессенджера?')) {
-                // Отключить все слушатели
-                Object.keys(chatListeners).forEach(chatId => {
-                    database.ref(`private_messages/${chatId}`).off('child_added', chatListeners[chatId]);
-                });
-                
-                // Отписаться от всех контактов
-                Object.keys(contacts).forEach(userId => {
-                    database.ref(`users/${userId}`).off();
-                });
-                
-                // Отписаться от списка контактов
-                database.ref(`contacts/${myUserId}`).off();
-                
-                // Сбросить состояние
-                currentUser = null;
-                myUserId = null;
-                myUserData = null;
-                currentChatWith = null;
-                lastLoadedMessageId = null;
-                contacts = {};
-                users = {};
-                unreadMessages = {};
-                chatListeners = {};
-                
-                // Показать панель входа
-                userPanel.style.display = 'none';
-                loginPanel.style.display = 'block';
-                usernameInput.value = '';
-                
-                // Деактивировать поле ввода сообщений
-                messageInput.disabled = true;
-                sendBtn.disabled = true;
-                
-                // Очистить списки
-                contactsList.innerHTML = '<div class="empty-chat">Добавьте друга по ID</div>';
-                chatMessages.innerHTML = '<div class="empty-chat">Выберите контакт для начала общения</div>';
-                
-                // Показать сохраненного пользователя
-                checkSavedUser();
-            }
+        // Удаление аккаунта
+        deleteAccountBtn.addEventListener('click', () => {
+            confirmationModal.style.display = 'flex';
         });
+        
+        // Подтверждение удаления аккаунта
+        confirmDeleteBtn.addEventListener('click', deleteAccount);
+        
+        // Отмена удаления аккаунта
+        cancelDeleteBtn.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+        });
+        
+        // Функция удаления аккаунта
+        function deleteAccount() {
+            showLoading();
+            
+            // 1. Удалить все чаты пользователя
+            deleteAllUserChats();
+            
+            // 2. Удалить пользователя из контактов его друзей
+            deleteUserFromFriendsContacts();
+            
+            // 3. Удалить контакты пользователя
+            database.ref(`contacts/${myUserId}`).remove();
+            
+            // 4. Удалить пользователя
+            database.ref(`users/${myUserId}`).remove()
+                .then(() => {
+                    // 5. Удалить данные из LocalStorage
+                    clearLocalStorage();
+                    
+                    // 6. Сбросить состояние приложения
+                    resetAppState();
+                    
+                    // 7. Скрыть окно подтверждения и загрузки
+                    confirmationModal.style.display = 'none';
+                    hideLoading();
+                    
+                    // 8. Показать форму входа
+                    loginPanel.style.display = 'block';
+                    userPanel.style.display = 'none';
+                    usernameInput.value = '';
+                    
+                    showNotification('Аккаунт успешно удален');
+                })
+                .catch(error => {
+                    console.error('Ошибка при удалении аккаунта:', error);
+                    hideLoading();
+                    confirmationModal.style.display = 'none';
+                    alert('Произошла ошибка при удалении аккаунта');
+                });
+        }
+        
+        // Удалить все чаты пользователя
+        function deleteAllUserChats() {
+            // Получить все ID чатов, в которых участвует пользователь
+            Object.keys(contacts).forEach(friendId => {
+                const chatId = getChatId(friendId);
+                database.ref(`private_messages/${chatId}`).remove();
+            });
+        }
+        
+        // Удалить пользователя из контактов его друзей
+        function deleteUserFromFriendsContacts() {
+            Object.keys(contacts).forEach(friendId => {
+                database.ref(`contacts/${friendId}/${myUserId}`).remove();
+            });
+        }
+        
+        // Очистить LocalStorage
+        function clearLocalStorage() {
+            localStorage.removeItem(STORAGE_KEYS.USER_ID);
+            localStorage.removeItem(STORAGE_KEYS.USER_NAME);
+            localStorage.removeItem(STORAGE_KEYS.CONTACTS);
+        }
+        
+        // Сбросить состояние приложения
+        function resetAppState() {
+            // Отключить все слушатели
+            Object.keys(chatListeners).forEach(chatId => {
+                database.ref(`private_messages/${chatId}`).off('child_added', chatListeners[chatId]);
+            });
+            
+            // Отписаться от всех контактов
+            Object.keys(contacts).forEach(userId => {
+                database.ref(`users/${userId}`).off();
+            });
+            
+            // Отписаться от списка контактов
+            database.ref(`contacts/${myUserId}`).off();
+            
+            // Сбросить состояние
+            currentUser = null;
+            myUserId = null;
+            myUserData = null;
+            currentChatWith = null;
+            lastLoadedMessageId = null;
+            contacts = {};
+            users = {};
+            unreadMessages = {};
+            chatListeners = {};
+            
+            // Деактивировать поле ввода сообщений
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+            
+            // Очистить списки
+            contactsList.innerHTML = '<div class="empty-chat">Добавьте друга по ID</div>';
+            chatMessages.innerHTML = '<div class="empty-chat">Выберите контакт для начала общения</div>';
+        }
         
         // Копировать ID
         copyIdBtn.addEventListener('click', () => {
@@ -1201,9 +1432,6 @@
                 notification.classList.remove('blink');
             }, 5000);
         }
-        
-        // Фокус на поле ввода имени при загрузке
-        usernameInput.focus();
         
         // Обработка видимости страницы для уведомлений
         document.addEventListener('visibilitychange', function() {
