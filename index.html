@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный Мессенджер</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tahoma&display=swap">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tahoma', sans-serif;
+        }
+
+        body {
+            background-color: #2E7D32;
+            background-image: linear-gradient(to bottom, #1B5E20 0%, #4CAF50 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #E8F5E9;
+            border: 2px solid #1B5E20;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            max-height: 800px;
+        }
+
+        .header {
+            background: linear-gradient(to right, #1B5E20, #2E7D32);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #FF9800;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .header p {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #C8E6C9;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #F1F8E9;
+            border-right: 2px solid #A5D6A7;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .login-panel, .user-panel {
+            background-color: #F1F8E9;
+            border: 2px solid #66BB6A;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .contacts-panel {
+            background-color: #F1F8E9;
+            border: 2px solid #66BB6A;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            background-color: #FFFFFF;
+            border: 2px solid #66BB6A;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            overflow-y: auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 5px;
+            max-width: 85%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .message-sent {
+            background-color: #C8E6C9;
+            margin-left: auto;
+            border: 1px solid #4CAF50;
+        }
+
+        .message-received {
+            background-color: #E8F5E9;
+            border: 1px solid #81C784;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            color: #1B5E20;
+            margin-bottom: 3px;
+            font-size: 13px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: #666666;
+            text-align: right;
+            margin-top: 3px;
+        }
+
+        .message-input {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        input, button, textarea {
+            padding: 10px;
+            border: 2px solid #81C784;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            flex: 1;
+            background-color: #FFFFFF;
+            min-width: 0;
+        }
+
+        textarea {
+            resize: none;
+            height: 60px;
+            font-family: 'Tahoma', sans-serif;
+        }
+
+        button {
+            background: linear-gradient(to bottom, #F1F8E9, #C8E6C9);
+            color: #1B5E20;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: linear-gradient(to bottom, #E8F5E9, #A5D6A7);
+        }
+
+        button:active {
+            background: linear-gradient(to bottom, #C8E6C9, #81C784);
+        }
+
+        .emoji-btn {
+            background-color: #FFB74D;
+            color: #000;
+            width: 50px;
+        }
+
+        .login-input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(to bottom, #4CAF50, #388E3C);
+            color: white;
+            font-weight: bold;
+            border: 1px solid #2E7D32;
+            padding: 12px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(to bottom, #F44336, #D32F2F);
+            color: white;
+            font-weight: bold;
+            border: 1px solid #C62828;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .current-user {
+            font-weight: bold;
+            color: #1B5E20;
+            margin-bottom: 15px;
+            padding: 8px;
+            background-color: #C8E6C9;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .user-id {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            word-break: break-all;
+            background-color: #FFF;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #A5D6A7;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #FFF9C4;
+            border: 2px solid #FFB300;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            max-width: 300px;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .footer {
+            background-color: #1B5E20;
+            color: #C8E6C9;
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            border-top: 2px solid #FF9800;
+            flex-shrink: 0;
+        }
+
+        /* Старые стили */
+        .window-title {
+            background: linear-gradient(to right, #1B5E20, #2E7D32);
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #1B5E20;
+            margin: -15px -15px 15px -15px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        /* Контакты */
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .contact-item {
+            padding: 10px;
+            border-bottom: 1px solid #C8E6C9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-item:hover {
+            background-color: #E8F5E9;
+        }
+
+        .contact-item.active {
+            background-color: #C8E6C9;
+            border-left: 3px solid #1B5E20;
+        }
+
+        .contact-name {
+            font-weight: bold;
+            color: #1B5E20;
+        }
+
+        .contact-id {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .add-contact-panel {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #A5D6A7;
+        }
+
+        .add-contact-input {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        /* Полоса прокрутки в зеленом стиле */
+        .chat-messages::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar,
+        .contacts-list::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track,
+        .sidebar::-webkit-scrollbar-track,
+        .contacts-list::-webkit-scrollbar-track {
+            background: #F1F8E9;
+            border-left: 1px solid #A5D6A7;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb,
+        .sidebar::-webkit-scrollbar-thumb,
+        .contacts-list::-webkit-scrollbar-thumb {
+            background: #81C784;
+            border: 2px solid #F1F8E9;
+            border-radius: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover,
+        .sidebar::-webkit-scrollbar-thumb:hover,
+        .contacts-list::-webkit-scrollbar-thumb:hover {
+            background: #66BB6A;
+        }
+
+        .empty-chat {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+            font-style: italic;
+        }
+        
+        .copy-id-btn {
+            background: linear-gradient(to bottom, #2196F3, #1976D2);
+            color: white;
+            font-size: 11px;
+            padding: 4px 8px;
+            margin-top: 5px;
+            width: 100%;
+        }
+        
+        .new-message-indicator {
+            background-color: #FF5722;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 5px;
+        }
+        
+        .auto-login-btn {
+            background: linear-gradient(to bottom, #FF9800, #F57C00);
+            color: white;
+            font-size: 11px;
+            padding: 4px 8px;
+            margin-top: 5px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Личный Мессенджер</h1>
+            <p>Общайтесь приватно с друзьями</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="login-panel" id="loginPanel">
+                    <div class="window-title">Вход в мессенджер</div>
+                    <input type="text" id="usernameInput" class="login-input" placeholder="Введите ваше имя" maxlength="20">
+                    <button id="loginBtn" class="login-btn">Войти</button>
+                    <div id="savedUserInfo" style="display: none; margin-top: 10px; padding: 10px; background-color: #FFF; border-radius: 5px; border: 1px solid #A5D6A7;">
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Сохраненный пользователь:</div>
+                        <div style="font-weight: bold;" id="savedUserName"></div>
+                        <div style="font-size: 11px; color: #888;" id="savedUserId"></div>
+                        <button id="autoLoginBtn" class="auto-login-btn">Войти под этим именем</button>
+                    </div>
+                </div>
+                
+                <div class="user-panel" id="userPanel" style="display: none;">
+                    <div class="current-user">
+                        <div>Вы: <span id="currentUserName"></span></div>
+                        <div class="user-id">Ваш ID: <span id="currentUserId"></span></div>
+                        <button id="copyIdBtn" class="copy-id-btn">Скопировать ID</button>
+                    </div>
+                    
+                    <div class="contacts-panel">
+                        <div class="window-title">Контакты</div>
+                        <div class="add-contact-panel">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Добавить друга по ID:</div>
+                            <div class="add-contact-input">
+                                <input type="text" id="friendIdInput" placeholder="ID друга (до 8 символов)" maxlength="8">
+                                <button id="addFriendBtn">+</button>
+                            </div>
+                        </div>
+                        <div class="contacts-list" id="contactsList">
+                            <div class="empty-chat">Добавьте друга по ID</div>
+                        </div>
+                    </div>
+                    
+                    <button id="logoutBtn" class="logout-btn">Выйти</button>
+                </div>
+            </div>
+            
+            <div class="chat-area">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="empty-chat">Выберите контакт для начала общения</div>
+                </div>
+                
+                <div class="message-input">
+                    <textarea id="messageInput" placeholder="Напишите сообщение..." disabled rows="2"></textarea>
+                    <button id="sendBtn" disabled>Отправить</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© Личный Мессенджер</p>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <strong>Новое сообщение!</strong>
+    </div>
+
+    <script>
+        // Конфигурация Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTx2Y9ctiWp26YeMmAHAxDZd_gVI_ZMdw",
+            authDomain: "kcalls.firebaseapp.com",
+            databaseURL: "https://kcalls-default-rtdb.firebaseio.com",
+            projectId: "kcalls",
+            storageBucket: "kcalls.firebasestorage.app",
+            messagingSenderId: "990117089104",
+            appId: "1:990117089104:web:278a42c037e975ebb76655",
+            measurementId: "G-TK6GVEX9G5"
+        };
+
+        // Инициализация Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // Элементы DOM
+        const loginPanel = document.getElementById('loginPanel');
+        const userPanel = document.getElementById('userPanel');
+        const usernameInput = document.getElementById('usernameInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const currentUserName = document.getElementById('currentUserName');
+        const currentUserId = document.getElementById('currentUserId');
+        const copyIdBtn = document.getElementById('copyIdBtn');
+        const friendIdInput = document.getElementById('friendIdInput');
+        const addFriendBtn = document.getElementById('addFriendBtn');
+        const contactsList = document.getElementById('contactsList');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const notification = document.getElementById('notification');
+        const savedUserInfo = document.getElementById('savedUserInfo');
+        const savedUserName = document.getElementById('savedUserName');
+        const savedUserId = document.getElementById('savedUserId');
+        const autoLoginBtn = document.getElementById('autoLoginBtn');
+        
+        let currentUser = null;
+        let myUserId = null;
+        let myUserData = null;
+        let isSending = false;
+        let currentChatWith = null;
+        let lastLoadedMessageId = null;
+        
+        // Структуры для хранения данных
+        let contacts = {};
+        let users = {};
+        let unreadMessages = {};
+        let chatListeners = {};
+        
+        // Ключи для LocalStorage
+        const STORAGE_KEYS = {
+            USER_ID: 'messenger_user_id',
+            USER_NAME: 'messenger_user_name',
+            CONTACTS: 'messenger_contacts'
+        };
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSavedUser();
+            usernameInput.focus();
+        });
+        
+        // Проверить сохраненного пользователя
+        function checkSavedUser() {
+            const savedId = localStorage.getItem(STORAGE_KEYS.USER_ID);
+            const savedName = localStorage.getItem(STORAGE_KEYS.USER_NAME);
+            
+            if (savedId && savedName) {
+                savedUserName.textContent = savedName;
+                savedUserId.textContent = `ID: ${savedId}`;
+                savedUserInfo.style.display = 'block';
+            }
+        }
+        
+        // Вход в систему
+        loginBtn.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            if (!username) {
+                alert('Введите имя для входа в мессенджер!');
+                return;
+            }
+            
+            loginUser(username);
+        });
+        
+        // Автоматический вход
+        autoLoginBtn.addEventListener('click', () => {
+            const savedName = localStorage.getItem(STORAGE_KEYS.USER_NAME);
+            if (savedName) {
+                loginUser(savedName, true);
+            }
+        });
+        
+        // Функция входа пользователя
+        function loginUser(username, useSavedId = false) {
+            currentUser = username;
+            
+            if (useSavedId) {
+                // Используем сохраненный ID
+                myUserId = localStorage.getItem(STORAGE_KEYS.USER_ID);
+                if (!myUserId) {
+                    myUserId = generateShortId();
+                }
+            } else {
+                // Генерируем новый ID
+                myUserId = generateShortId();
+            }
+            
+            // Сохранить данные в LocalStorage
+            saveUserToLocalStorage();
+            
+            // Показать панель пользователя
+            loginPanel.style.display = 'none';
+            userPanel.style.display = 'flex';
+            userPanel.style.flexDirection = 'column';
+            
+            currentUserName.textContent = currentUser;
+            currentUserId.textContent = myUserId;
+            
+            // Сохранить пользователя в Firebase
+            saveUserToFirebase();
+            
+            // Загрузить контакты
+            loadContacts();
+        }
+        
+        // Выход из системы
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Вы действительно хотите выйти из мессенджера?')) {
+                // Отключить все слушатели
+                Object.keys(chatListeners).forEach(chatId => {
+                    database.ref(`private_messages/${chatId}`).off('child_added', chatListeners[chatId]);
+                });
+                
+                // Отписаться от всех контактов
+                Object.keys(contacts).forEach(userId => {
+                    database.ref(`users/${userId}`).off();
+                });
+                
+                // Отписаться от списка контактов
+                database.ref(`contacts/${myUserId}`).off();
+                
+                // Сбросить состояние
+                currentUser = null;
+                myUserId = null;
+                myUserData = null;
+                currentChatWith = null;
+                lastLoadedMessageId = null;
+                contacts = {};
+                users = {};
+                unreadMessages = {};
+                chatListeners = {};
+                
+                // Показать панель входа
+                userPanel.style.display = 'none';
+                loginPanel.style.display = 'block';
+                usernameInput.value = '';
+                
+                // Деактивировать поле ввода сообщений
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+                
+                // Очистить списки
+                contactsList.innerHTML = '<div class="empty-chat">Добавьте друга по ID</div>';
+                chatMessages.innerHTML = '<div class="empty-chat">Выберите контакт для начала общения</div>';
+                
+                // Показать сохраненного пользователя
+                checkSavedUser();
+            }
+        });
+        
+        // Копировать ID
+        copyIdBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(myUserId).then(() => {
+                showNotification('ID скопирован! Поделитесь им с друзьями');
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+                alert('Скопируйте ID вручную: ' + myUserId);
+            });
+        });
+        
+        // Добавить друга
+        addFriendBtn.addEventListener('click', addFriend);
+        friendIdInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addFriend();
+            }
+        });
+        
+        // Отправка сообщения
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Генерация короткого ID (до 8 символов)
+        function generateShortId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        // Сохранение пользователя в LocalStorage
+        function saveUserToLocalStorage() {
+            localStorage.setItem(STORAGE_KEYS.USER_ID, myUserId);
+            localStorage.setItem(STORAGE_KEYS.USER_NAME, currentUser);
+        }
+        
+        // Сохранение контактов в LocalStorage
+        function saveContactsToLocalStorage() {
+            localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
+        }
+        
+        // Загрузка контактов из LocalStorage
+        function loadContactsFromLocalStorage() {
+            const savedContacts = localStorage.getItem(STORAGE_KEYS.CONTACTS);
+            if (savedContacts) {
+                try {
+                    return JSON.parse(savedContacts);
+                } catch (e) {
+                    console.error('Ошибка загрузки контактов из LocalStorage:', e);
+                }
+            }
+            return {};
+        }
+        
+        // Сохранение пользователя в Firebase
+        function saveUserToFirebase() {
+            myUserData = {
+                username: currentUser,
+                userId: myUserId,
+                createdAt: Date.now(),
+                lastSeen: Date.now()
+            };
+            
+            database.ref(`users/${myUserId}`).set(myUserData);
+            
+            // Обновлять время последней активности каждую минуту
+            setInterval(() => {
+                if (myUserData) {
+                    database.ref(`users/${myUserId}/lastSeen`).set(Date.now());
+                }
+            }, 60000);
+        }
+        
+        // Загрузка контактов
+        function loadContacts() {
+            // Сначала загружаем из LocalStorage
+            contacts = loadContactsFromLocalStorage();
+            
+            // Затем подписываемся на обновления из Firebase
+            database.ref(`contacts/${myUserId}`).on('value', (snapshot) => {
+                const firebaseContacts = snapshot.val() || {};
+                
+                // Объединяем контакты из LocalStorage и Firebase
+                // Предпочтение отдается Firebase, так как там актуальные данные
+                contacts = { ...contacts, ...firebaseContacts };
+                
+                // Сохраняем объединенные контакты обратно в LocalStorage
+                saveContactsToLocalStorage();
+                
+                // Загрузить информацию о пользователях-контактах
+                loadContactUsers();
+                
+                // Обновить список контактов
+                updateContactsList();
+                
+                // Подписаться на чаты с контактами
+                subscribeToContactChats();
+            });
+        }
+        
+        // Загрузка информации о пользователях-контактах
+        function loadContactUsers() {
+            Object.keys(contacts).forEach(userId => {
+                database.ref(`users/${userId}`).on('value', (snapshot) => {
+                    const userData = snapshot.val();
+                    if (userData) {
+                        users[userId] = userData;
+                        updateContactsList();
+                    }
+                });
+            });
+        }
+        
+        // Обновление списка контактов
+        function updateContactsList() {
+            contactsList.innerHTML = '';
+            
+            if (Object.keys(contacts).length === 0) {
+                contactsList.innerHTML = '<div class="empty-chat">Добавьте друга по ID</div>';
+                return;
+            }
+            
+            Object.keys(contacts).forEach(userId => {
+                const user = users[userId];
+                const contactItem = document.createElement('div');
+                contactItem.className = `contact-item ${currentChatWith === userId ? 'active' : ''}`;
+                contactItem.dataset.userId = userId;
+                
+                const displayName = user ? user.username : 'Неизвестный пользователь';
+                const lastSeen = user ? getLastSeenText(user.lastSeen) : '';
+                const unreadCount = unreadMessages[userId] || 0;
+                
+                contactItem.innerHTML = `
+                    <div style="flex: 1;">
+                        <div class="contact-name">${escapeHtml(displayName)}</div>
+                        <div class="contact-id">ID: ${userId}</div>
+                        ${lastSeen ? `<div style="font-size: 9px; color: #888;">${lastSeen}</div>` : ''}
+                    </div>
+                    ${unreadCount > 0 ? `<div class="new-message-indicator">${unreadCount}</div>` : ''}
+                `;
+                
+                contactItem.addEventListener('click', () => {
+                    openChat(userId);
+                });
+                
+                contactsList.appendChild(contactItem);
+            });
+        }
+        
+        // Подписаться на чаты с контактами
+        function subscribeToContactChats() {
+            Object.keys(contacts).forEach(userId => {
+                subscribeToChat(userId);
+            });
+        }
+        
+        // Подписаться на чат с пользователем
+        function subscribeToChat(otherUserId) {
+            const chatId = getChatId(otherUserId);
+            
+            // Если уже есть слушатель для этого чата, не создаем новый
+            if (chatListeners[chatId]) {
+                return;
+            }
+            
+            const listener = database.ref(`private_messages/${chatId}`).on('child_added', (snapshot) => {
+                const message = snapshot.val();
+                const messageId = snapshot.key;
+                
+                // Пропускаем если это наше сообщение
+                if (message.senderId === myUserId) {
+                    return;
+                }
+                
+                // Если чат открыт - отображаем сообщение
+                if (currentChatWith === otherUserId) {
+                    // Проверяем, не отображали ли уже это сообщение
+                    if (messageId === lastLoadedMessageId) {
+                        return;
+                    }
+                    
+                    displayMessage(message);
+                    lastLoadedMessageId = messageId;
+                    
+                    // Прокручиваем вниз
+                    setTimeout(() => {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 50);
+                } else {
+                    // Если чат не открыт - увеличиваем счетчик непрочитанных
+                    unreadMessages[otherUserId] = (unreadMessages[otherUserId] || 0) + 1;
+                    updateContactsList();
+                    
+                    // Показать уведомление
+                    showNotification(`Новое сообщение от ${users[otherUserId]?.username || 'пользователя'}`);
+                }
+            });
+            
+            chatListeners[chatId] = listener;
+        }
+        
+        // Добавление друга
+        function addFriend() {
+            const friendId = friendIdInput.value.trim();
+            if (!friendId) {
+                alert('Введите ID друга');
+                return;
+            }
+            
+            // Проверка длины ID
+            if (friendId.length > 8) {
+                alert('ID должен быть не более 8 символов');
+                return;
+            }
+            
+            if (friendId === myUserId) {
+                alert('Нельзя добавить самого себя!');
+                friendIdInput.value = '';
+                return;
+            }
+            
+            if (contacts[friendId]) {
+                alert('Этот пользователь уже в вашем списке контактов');
+                friendIdInput.value = '';
+                return;
+            }
+            
+            // Проверить существование пользователя
+            database.ref(`users/${friendId}`).once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    // Добавить в контакты
+                    contacts[friendId] = {
+                        addedAt: Date.now()
+                    };
+                    
+                    // Сохранить в LocalStorage
+                    saveContactsToLocalStorage();
+                    
+                    // Сохранить в Firebase
+                    database.ref(`contacts/${myUserId}/${friendId}`).set({
+                        addedAt: Date.now()
+                    });
+                    
+                    // Также добавить себя в контакты друга
+                    database.ref(`contacts/${friendId}/${myUserId}`).set({
+                        addedAt: Date.now()
+                    });
+                    
+                    friendIdInput.value = '';
+                    showNotification('Друг добавлен!');
+                    
+                    // Подписаться на чат с новым другом
+                    subscribeToChat(friendId);
+                    
+                    // Открыть чат с новым другом
+                    openChat(friendId);
+                } else {
+                    alert('Пользователь с таким ID не найден');
+                    friendIdInput.value = '';
+                }
+            }).catch(error => {
+                console.error('Ошибка при добавлении друга:', error);
+                alert('Ошибка при добавлении друга');
+            });
+        }
+        
+        // Открыть чат с пользователем
+        function openChat(userId) {
+            if (currentChatWith === userId) return;
+            
+            currentChatWith = userId;
+            lastLoadedMessageId = null;
+            
+            // Сбросить счетчик непрочитанных для этого чата
+            unreadMessages[userId] = 0;
+            updateContactsList();
+            
+            // Обновить активный контакт
+            document.querySelectorAll('.contact-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.userId === userId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Активировать поле ввода
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+            
+            // Загрузить историю сообщений
+            loadChatHistory(userId);
+        }
+        
+        // Получить ID чата (уникальный для пары пользователей)
+        function getChatId(otherUserId) {
+            if (!otherUserId) return null;
+            const ids = [myUserId, otherUserId].sort();
+            return ids.join('_');
+        }
+        
+        // Загрузить историю сообщений
+        function loadChatHistory(otherUserId) {
+            const chatId = getChatId(otherUserId);
+            
+            database.ref(`private_messages/${chatId}`).limitToLast(50).once('value').then((snapshot) => {
+                const messages = snapshot.val();
+                chatMessages.innerHTML = '';
+                
+                if (!messages) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.className = 'empty-chat';
+                    emptyDiv.textContent = `Начните общение с ${users[otherUserId]?.username || 'пользователем'}`;
+                    chatMessages.appendChild(emptyDiv);
+                    return;
+                }
+                
+                // Получаем ключи сообщений
+                const messageIds = Object.keys(messages);
+                
+                // Преобразуем объект в массив и сортируем по времени
+                const messagesArray = Object.values(messages);
+                messagesArray.sort((a, b) => a.timestamp - b.timestamp);
+                
+                // Отображаем историю сообщений
+                messagesArray.forEach((message, index) => {
+                    displayMessage(message);
+                    
+                    // Запоминаем ID последнего сообщения
+                    if (index === messagesArray.length - 1) {
+                        lastLoadedMessageId = messageIds[index];
+                    }
+                });
+                
+                // Прокручиваем вниз
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
+            }).catch(error => {
+                console.error('Ошибка загрузки истории сообщений:', error);
+                chatMessages.innerHTML = '<div class="empty-chat">Ошибка загрузки истории</div>';
+            });
+        }
+        
+        // Отправка сообщения
+        function sendMessage() {
+            if (isSending || !currentChatWith || !messageInput.value.trim()) return;
+            
+            const messageText = messageInput.value.trim();
+            if (messageText.length > 1000) {
+                alert('Сообщение слишком длинное (максимум 1000 символов)');
+                return;
+            }
+            
+            isSending = true;
+            
+            const messageData = {
+                senderId: myUserId,
+                senderName: currentUser,
+                text: messageText,
+                timestamp: Date.now(),
+                chatId: getChatId(currentChatWith)
+            };
+            
+            const chatId = getChatId(currentChatWith);
+            
+            // Добавить сообщение локально сразу
+            displayMessage({
+                senderId: myUserId,
+                senderName: currentUser,
+                text: messageText,
+                timestamp: messageData.timestamp
+            });
+            
+            // Добавить сообщение в Firebase
+            database.ref(`private_messages/${chatId}`).push(messageData)
+                .then(() => {
+                    // Успешно отправлено
+                    messageInput.value = '';
+                    messageInput.focus();
+                    
+                    // Прокручиваем вниз
+                    setTimeout(() => {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 50);
+                })
+                .catch((error) => {
+                    console.error('Ошибка отправки сообщения:', error);
+                    alert('Ошибка отправки сообщения');
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        isSending = false;
+                    }, 500);
+                });
+        }
+        
+        // Отображение сообщения
+        function displayMessage(message) {
+            // Убираем сообщение "Начните общение"
+            if (chatMessages.querySelector('.empty-chat')) {
+                chatMessages.innerHTML = '';
+            }
+            
+            const messageDiv = document.createElement('div');
+            const isMyMessage = message.senderId === myUserId;
+            
+            // Форматируем время
+            const date = new Date(message.timestamp);
+            const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.className = `message ${isMyMessage ? 'message-sent' : 'message-received'}`;
+            messageDiv.innerHTML = `
+                <div class="message-sender">${isMyMessage ? 'Вы' : escapeHtml(message.senderName)}</div>
+                <div class="message-text">${escapeHtml(message.text)}</div>
+                <div class="message-time">${timeString}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+        }
+        
+        // Получить текст "был в сети"
+        function getLastSeenText(lastSeen) {
+            if (!lastSeen) return '';
+            
+            const diff = Date.now() - lastSeen;
+            const minutes = Math.floor(diff / 60000);
+            
+            if (minutes < 1) return 'только что';
+            if (minutes < 60) return `${minutes} мин назад`;
+            
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} ч назад`;
+            
+            const days = Math.floor(hours / 24);
+            return `${days} дн назад`;
+        }
+        
+        // Экранирование HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Показать уведомление
+        function showNotification(text) {
+            notification.innerHTML = `<strong>${escapeHtml(text)}</strong>`;
+            notification.style.display = 'block';
+            notification.classList.add('blink');
+            
+            // Воспроизвести звук уведомления
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log("Аудио не поддерживается");
+            }
+            
+            // Скрыть уведомление через 5 секунд
+            setTimeout(() => {
+                notification.style.display = 'none';
+                notification.classList.remove('blink');
+            }, 5000);
+        }
+        
+        // Автозаполнение имени для удобства тестирования
+        setTimeout(() => {
+            const savedName = localStorage.getItem(STORAGE_KEYS.USER_NAME);
+            if (!savedName) {
+                usernameInput.value = "Пользователь_" + Math.floor(Math.random() * 1000);
+            }
+        }, 500);
+        
+        // Обработка видимости страницы для уведомлений
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                notification.style.display = 'none';
+                notification.classList.remove('blink');
+            }
+        });
+    </script>
+</body>
+</html>
