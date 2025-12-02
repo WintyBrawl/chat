@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный Мессенджер</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tahoma&display=swap">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -14,15 +14,14 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Tahoma', sans-serif;
         }
 
         body {
             background-color: #2E7D32;
             background-image: linear-gradient(to bottom, #1B5E20 0%, #4CAF50 100%);
             min-height: 100vh;
-            padding: 10px;
+            padding: 20px;
             color: #000;
             display: flex;
             justify-content: center;
@@ -35,39 +34,31 @@
             background-color: #E8F5E9;
             border: 2px solid #1B5E20;
             border-radius: 10px;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 95vh;
-            max-height: none;
+            height: 90vh;
+            max-height: 800px;
         }
 
         .header {
             background: linear-gradient(to right, #1B5E20, #2E7D32);
             color: white;
-            padding: 12px 10px;
+            padding: 15px;
             text-align: center;
             border-bottom: 2px solid #FF9800;
             flex-shrink: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-content {
-            flex: 1;
         }
 
         .header h1 {
-            font-size: 20px;
-            text-shadow: 1px 1px 0 #000;
-            font-weight: 700;
+            font-size: 24px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .header p {
-            font-size: 11px;
-            margin-top: 3px;
+            font-size: 12px;
+            margin-top: 5px;
             color: #C8E6C9;
         }
 
@@ -75,37 +66,32 @@
             display: flex;
             flex: 1;
             overflow: hidden;
-            flex-direction: column;
         }
 
-        /* Мобильная версия: боковая панель превращается в верхнюю панель */
         .sidebar {
-            width: 100%;
+            width: 250px;
             background-color: #F1F8E9;
-            border-bottom: 2px solid #A5D6A7;
-            padding: 10px;
+            border-right: 2px solid #A5D6A7;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            flex-shrink: 0;
-            max-height: 40vh;
         }
 
         .chat-area {
             flex: 1;
-            padding: 10px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            min-height: 0;
         }
 
         .login-panel, .user-panel {
             background-color: #F1F8E9;
             border: 2px solid #66BB6A;
             border-radius: 5px;
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
             flex-shrink: 0;
         }
 
@@ -113,8 +99,8 @@
             background-color: #F1F8E9;
             border: 2px solid #66BB6A;
             border-radius: 5px;
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -126,8 +112,8 @@
             background-color: #FFFFFF;
             border: 2px solid #66BB6A;
             border-radius: 5px;
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
             overflow-y: auto;
             min-height: 0;
             display: flex;
@@ -135,33 +121,30 @@
         }
 
         .message {
-            margin-bottom: 10px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            max-width: 90%;
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 5px;
+            max-width: 85%;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            font-size: 14px;
         }
 
         .message-sent {
             background-color: #C8E6C9;
             margin-left: auto;
             border: 1px solid #4CAF50;
-            margin-right: 5px;
         }
 
         .message-received {
             background-color: #E8F5E9;
             border: 1px solid #81C784;
-            margin-left: 5px;
         }
 
         .message-sender {
             font-weight: bold;
             color: #1B5E20;
-            margin-bottom: 4px;
-            font-size: 12px;
+            margin-bottom: 3px;
+            font-size: 13px;
         }
 
         .message-text {
@@ -173,36 +156,32 @@
             font-size: 10px;
             color: #666666;
             text-align: right;
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         .message-input {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
-            align-items: flex-end;
         }
 
         input, button, textarea {
-            padding: 12px 10px;
+            padding: 10px;
             border: 2px solid #81C784;
-            border-radius: 8px;
-            font-size: 15px;
-            -webkit-appearance: none;
+            border-radius: 5px;
+            font-size: 14px;
         }
 
         input, textarea {
             flex: 1;
             background-color: #FFFFFF;
             min-width: 0;
-            font-size: 15px;
         }
 
         textarea {
             resize: none;
-            height: 55px;
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.4;
+            height: 60px;
+            font-family: 'Tahoma', sans-serif;
         }
 
         button {
@@ -211,10 +190,6 @@
             font-weight: bold;
             cursor: pointer;
             white-space: nowrap;
-            min-height: 50px;
-            padding: 12px 15px;
-            font-size: 15px;
-            border: 2px solid #81C784;
         }
 
         button:hover {
@@ -228,8 +203,7 @@
         .login-input {
             width: 100%;
             margin-bottom: 10px;
-            padding: 12px;
-            font-size: 16px;
+            padding: 10px;
         }
 
         .login-btn {
@@ -238,8 +212,7 @@
             color: white;
             font-weight: bold;
             border: 1px solid #2E7D32;
-            padding: 14px;
-            font-size: 16px;
+            padding: 12px;
         }
 
         .delete-account-btn {
@@ -249,17 +222,15 @@
             border: 1px solid #C62828;
             width: 100%;
             margin-top: 10px;
-            padding: 12px;
-            font-size: 15px;
         }
 
         .current-user {
             font-weight: bold;
             color: #1B5E20;
-            margin-bottom: 12px;
-            padding: 10px;
+            margin-bottom: 15px;
+            padding: 8px;
             background-color: #C8E6C9;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 14px;
         }
 
@@ -270,25 +241,22 @@
             word-break: break-all;
             background-color: #FFF;
             padding: 5px;
-            border-radius: 5px;
+            border-radius: 3px;
             border: 1px solid #A5D6A7;
         }
 
         .notification {
             position: fixed;
-            top: 15px;
-            right: 15px;
-            left: 15px;
+            top: 20px;
+            right: 20px;
             background-color: #FFF9C4;
             border: 2px solid #FFB300;
-            border-radius: 8px;
-            padding: 12px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             display: none;
-            max-width: none;
-            text-align: center;
-            font-size: 14px;
+            max-width: 300px;
         }
 
         .blink {
@@ -305,22 +273,23 @@
             color: #C8E6C9;
             text-align: center;
             padding: 8px;
-            font-size: 10px;
+            font-size: 11px;
             border-top: 2px solid #FF9800;
             flex-shrink: 0;
         }
 
+        /* Старые стили */
         .window-title {
             background: linear-gradient(to right, #1B5E20, #2E7D32);
             color: white;
-            padding: 8px 12px;
+            padding: 5px 10px;
             font-weight: bold;
             border-bottom: 1px solid #1B5E20;
-            margin: -12px -12px 12px -12px;
+            margin: -15px -15px 15px -15px;
             border-radius: 5px 5px 0 0;
-            font-size: 14px;
         }
 
+        /* Контакты */
         .contacts-list {
             flex: 1;
             overflow-y: auto;
@@ -328,14 +297,13 @@
         }
 
         .contact-item {
-            padding: 12px 10px;
+            padding: 10px;
             border-bottom: 1px solid #C8E6C9;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 3px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
         }
 
         .contact-item:hover {
@@ -344,37 +312,36 @@
 
         .contact-item.active {
             background-color: #C8E6C9;
-            border-left: 4px solid #1B5E20;
+            border-left: 3px solid #1B5E20;
         }
 
         .contact-name {
             font-weight: bold;
             color: #1B5E20;
-            font-size: 14px;
         }
 
         .contact-id {
-            font-size: 11px;
+            font-size: 10px;
             color: #666;
         }
 
         .add-contact-panel {
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
             border-top: 1px dashed #A5D6A7;
         }
 
         .add-contact-input {
             display: flex;
-            gap: 8px;
+            gap: 5px;
             margin-top: 10px;
         }
 
-        /* Улучшения для скроллбаров на мобильных */
+        /* Полоса прокрутки в зеленом стиле */
         .chat-messages::-webkit-scrollbar,
         .sidebar::-webkit-scrollbar,
         .contacts-list::-webkit-scrollbar {
-            width: 8px;
+            width: 12px;
         }
 
         .chat-messages::-webkit-scrollbar-track,
@@ -382,7 +349,7 @@
         .contacts-list::-webkit-scrollbar-track {
             background: #F1F8E9;
             border-left: 1px solid #A5D6A7;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .chat-messages::-webkit-scrollbar-thumb,
@@ -390,7 +357,7 @@
         .contacts-list::-webkit-scrollbar-thumb {
             background: #81C784;
             border: 2px solid #F1F8E9;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .chat-messages::-webkit-scrollbar-thumb:hover,
@@ -402,54 +369,34 @@
         .empty-chat {
             text-align: center;
             color: #666;
-            padding: 30px 15px;
+            padding: 40px 20px;
             font-style: italic;
-            font-size: 14px;
         }
         
         .copy-id-btn {
             background: linear-gradient(to bottom, #2196F3, #1976D2);
             color: white;
-            font-size: 12px;
-            padding: 8px;
-            margin-top: 8px;
+            font-size: 11px;
+            padding: 4px 8px;
+            margin-top: 5px;
             width: 100%;
-            border-radius: 5px;
-            border: none;
+            border-radius: 3px;
         }
         
         .new-message-indicator {
             background-color: #FF5722;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 11px;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-left: 8px;
-            flex-shrink: 0;
+            margin-left: 5px;
         }
         
         .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            color: white;
-            font-size: 16px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .confirmation-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -459,17 +406,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 2000;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             z-index: 3000;
-            padding: 15px;
         }
         
         .confirmation-box {
             background-color: #FFF;
             border: 2px solid #D32F2F;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 20px;
             max-width: 400px;
-            width: 100%;
+            width: 90%;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
         
@@ -485,7 +446,6 @@
             margin-bottom: 20px;
             text-align: center;
             line-height: 1.5;
-            font-size: 14px;
         }
         
         .confirmation-buttons {
@@ -498,11 +458,10 @@
             background: linear-gradient(to bottom, #D32F2F, #B71C1C);
             color: white;
             font-weight: bold;
-            padding: 12px;
+            padding: 10px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 15px;
         }
         
         .cancel-btn {
@@ -510,14 +469,13 @@
             background: linear-gradient(to bottom, #757575, #616161);
             color: white;
             font-weight: bold;
-            padding: 12px;
+            padding: 10px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 15px;
         }
 
-        /* СТИЛИ ДЛЯ ПРОФИЛЯ */
+        /* Профиль */
         .profile-btn {
             background: linear-gradient(to bottom, #FF9800, #F57C00);
             color: white;
@@ -765,204 +723,61 @@
             color: white;
         }
 
-        /* Медиа-запросы для адаптивности */
-        @media (min-width: 768px) {
+        /* Удалить друга */
+        .remove-friend-btn {
+            background: linear-gradient(to bottom, #f44336, #d32f2f);
+            color: white;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: none;
+        }
+
+        .contact-item:hover .remove-friend-btn {
+            display: block;
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 768px) {
             .container {
-                height: 90vh;
-                max-height: 800px;
+                height: 95vh;
+                max-height: none;
             }
             
             .main-content {
-                flex-direction: row;
+                flex-direction: column;
             }
             
             .sidebar {
-                width: 250px;
-                max-height: none;
-                border-right: 2px solid #A5D6A7;
-                border-bottom: none;
-            }
-            
-            .notification {
-                left: auto;
-                right: 20px;
-                max-width: 300px;
-            }
-            
-            .message {
-                max-width: 85%;
-            }
-
-            .profile-btn {
-                font-size: 14px;
-                padding: 10px 20px;
-            }
-        }
-
-        @media (max-width: 767px) {
-            body {
-                padding: 5px;
-            }
-            
-            .container {
-                height: 98vh;
-                border-radius: 8px;
+                width: 100%;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 2px solid #A5D6A7;
             }
             
             .header {
-                padding: 10px 8px;
                 flex-direction: column;
-                gap: 10px;
+                text-align: center;
             }
             
-            .header-content {
-                width: 100%;
-            }
-            
-            .header h1 {
-                font-size: 18px;
-            }
-            
-            .sidebar {
-                max-height: 35vh;
-            }
-            
-            .chat-area {
-                padding: 8px;
-            }
-            
-            .message-input {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            textarea {
-                width: 100%;
-                height: 60px;
-            }
-            
-            #sendBtn {
-                width: 100%;
-                min-height: 45px;
-            }
-            
-            .add-contact-input {
-                flex-direction: column;
-            }
-            
-            #friendIdInput, #addFriendBtn {
-                width: 100%;
-            }
-            
-            #addFriendBtn {
-                min-height: 45px;
-            }
-            
-            .confirmation-buttons {
-                flex-direction: column;
-            }
-
             .profile-btn {
-                width: 100%;
                 margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+            
+            .contact-item:hover .remove-friend-btn {
+                display: block;
+            }
+            
+            .remove-friend-btn {
+                display: block;
                 margin-top: 5px;
+                width: 100%;
             }
-
-            .profile-box {
-                padding: 15px;
-            }
-
-            .profile-buttons {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 16px;
-            }
-            
-            .header p {
-                font-size: 10px;
-            }
-            
-            .message {
-                max-width: 95%;
-                font-size: 13px;
-                padding: 7px 9px;
-            }
-            
-            .message-text {
-                font-size: 13px;
-            }
-            
-            input, button, textarea {
-                padding: 10px;
-                font-size: 14px;
-            }
-            
-            .footer {
-                font-size: 9px;
-                padding: 6px;
-            }
-            
-            .sidebar {
-                max-height: 30vh;
-                padding: 8px;
-            }
-            
-            .window-title {
-                padding: 6px 10px;
-                font-size: 13px;
-                margin: -8px -8px 8px -8px;
-            }
-
-            .profile-title {
-                font-size: 18px;
-            }
-
-            .profile-section-title {
-                font-size: 14px;
-            }
-        }
-
-        /* Улучшения для очень маленьких экранов */
-        @media (max-height: 600px) {
-            .sidebar {
-                max-height: 25vh;
-            }
-            
-            .chat-messages {
-                padding: 8px;
-            }
-            
-            .message {
-                margin-bottom: 6px;
-                padding: 6px 8px;
-            }
-
-            .profile-box {
-                max-height: 90vh;
-            }
-        }
-
-        /* Стили для клавиатуры на iOS */
-        @supports (-webkit-overflow-scrolling: touch) {
-            input, textarea {
-                font-size: 16px; /* Предотвращает увеличение в iOS */
-            }
-        }
-
-        /* Улучшенные стили для активных элементов */
-        button:active, .contact-item:active {
-            transform: scale(0.98);
-            transition: transform 0.1s;
-        }
-
-        /* Убираем выделение при тапе на мобильных */
-        button, .contact-item, input, textarea {
-            user-select: none;
-            -webkit-user-select: none;
         }
     </style>
 </head>
@@ -978,7 +793,7 @@
                 Вы точно хотите удалить аккаунт?<br>
                 <span style="color: #D32F2F; font-weight: bold;">Это действие нельзя отменить!</span><br><br>
                 Будут удалены:
-                <ul style="text-align: left; margin: 10px 0 10px 20px; font-size: 13px;">
+                <ul style="text-align: left; margin: 10px 0 10px 20px;">
                     <li>Ваш профиль</li>
                     <li>Все ваши контакты</li>
                     <li>Вся история сообщений</li>
@@ -1006,7 +821,7 @@
             
             <div class="profile-section">
                 <div class="profile-section-title">
-                    <span>Основная информация</span>
+                    Основная информация
                 </div>
                 
                 <div class="profile-input-group">
@@ -1045,10 +860,8 @@
     
     <div class="container">
         <div class="header">
-            <div class="header-content">
-                <h1>Личный Мессенджер</h1>
-                <p>Общайтесь приватно с друзьями</p>
-            </div>
+            <h1>Личный Мессенджер</h1>
+            <p>Общайтесь приватно с друзьями</p>
             <button id="profileBtn" class="profile-btn" style="display: none;">Мой профиль</button>
         </div>
         
@@ -1107,7 +920,6 @@
     </div>
 
     <script>
-        // Конфигурация Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDTx2Y9ctiWp26YeMmAHAxDZd_gVI_ZMdw",
             authDomain: "kcalls.firebaseapp.com",
@@ -1119,11 +931,9 @@
             measurementId: "G-TK6GVEX9G5"
         };
 
-        // Инициализация Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         
-        // Элементы DOM
         const loginPanel = document.getElementById('loginPanel');
         const userPanel = document.getElementById('userPanel');
         const usernameInput = document.getElementById('usernameInput');
@@ -1144,7 +954,6 @@
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
         
-        // Новые элементы для профиля
         const profileBtn = document.getElementById('profileBtn');
         const profileModal = document.getElementById('profileModal');
         const profileCloseBtn = document.getElementById('profileCloseBtn');
@@ -1165,93 +974,74 @@
         let currentChatWith = null;
         let lastLoadedMessageId = null;
         
-        // Структуры для хранения данных
         let contacts = {};
         let users = {};
         let unreadMessages = {};
         let chatListeners = {};
         
-        // Ключи для LocalStorage
         const STORAGE_KEYS = {
             USER_ID: 'messenger_user_id',
             USER_NAME: 'messenger_user_name',
             CONTACTS: 'messenger_contacts'
         };
         
-        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', () => {
             showLoading();
             autoLogin();
         });
         
-        // Показать загрузку
         function showLoading() {
             loadingOverlay.style.display = 'flex';
         }
         
-        // Скрыть загрузку
         function hideLoading() {
             setTimeout(() => {
                 loadingOverlay.style.display = 'none';
             }, 500);
         }
         
-        // Автоматический вход при загрузке
         function autoLogin() {
             const savedId = localStorage.getItem(STORAGE_KEYS.USER_ID);
             const savedName = localStorage.getItem(STORAGE_KEYS.USER_NAME);
             
             if (savedId && savedName) {
-                // Есть сохраненный аккаунт - выполняем автоматический вход
                 performAutoLogin(savedName, savedId);
             } else {
-                // Нет сохраненного аккаунта - показываем форму входа
                 hideLoading();
                 showLoginForm();
             }
         }
         
-        // Выполнить автоматический вход
         function performAutoLogin(username, userId) {
             currentUser = username;
             myUserId = userId;
             
-            // Проверить существование пользователя в Firebase
             database.ref(`users/${myUserId}`).once('value').then((snapshot) => {
                 if (snapshot.exists()) {
-                    // Пользователь существует в Firebase
                     loginUserDirectly(username, userId);
                 } else {
-                    // Пользователя нет в Firebase, но есть в LocalStorage
-                    // Создаем нового с тем же ID и именем
                     createNewUserWithExistingId(username, userId);
                 }
             }).catch(error => {
                 console.error('Ошибка проверки пользователя в Firebase:', error);
-                // При ошибке все равно создаем пользователя
                 createNewUserWithExistingId(username, userId);
             });
         }
         
-        // Создать нового пользователя с существующим ID
         function createNewUserWithExistingId(username, userId) {
             currentUser = username;
             myUserId = userId;
             
-            // Сохранить пользователя в Firebase
             saveUserToFirebase();
             
-            // Показать интерфейс мессенджера
             showMessengerInterface();
             hideLoading();
             
-            // Загрузить контакты
             loadContacts();
             
             showNotification(`Добро пожаловать обратно, ${username}!`);
         }
         
-        // Прямой вход пользователя
         function loginUserDirectly(username, userId) {
             currentUser = username;
             myUserId = userId;
@@ -1262,19 +1052,15 @@
                 lastSeen: Date.now()
             };
             
-            // Обновить время последней активности
             database.ref(`users/${myUserId}/lastSeen`).set(Date.now());
             
-            // Показать интерфейс мессенджера
             showMessengerInterface();
             hideLoading();
             
-            // Загрузить контакты
             loadContacts();
             
             showNotification(`Добро пожаловать обратно, ${username}!`);
             
-            // Обновлять время последней активности каждую минуту
             setInterval(() => {
                 if (myUserData) {
                     database.ref(`users/${myUserId}/lastSeen`).set(Date.now());
@@ -1282,12 +1068,10 @@
             }, 60000);
         }
         
-        // Показать форму входа
         function showLoginForm() {
             usernameInput.focus();
         }
         
-        // Вход в систему
         loginBtn.addEventListener('click', () => {
             const username = usernameInput.value.trim();
             if (!username) {
@@ -1298,30 +1082,24 @@
             loginUser(username);
         });
         
-        // Функция входа пользователя (новая регистрация)
         function loginUser(username) {
             showLoading();
             
             currentUser = username;
             myUserId = generateShortId();
             
-            // Сохранить данные в LocalStorage
             saveUserToLocalStorage();
             
-            // Сохранить пользователя в Firebase
             saveUserToFirebase();
             
-            // Показать интерфейс мессенджера
             showMessengerInterface();
             hideLoading();
             
-            // Загрузить контакты
             loadContacts();
             
             showNotification(`Добро пожаловать, ${username}!`);
         }
         
-        // Показать интерфейс мессенджера
         function showMessengerInterface() {
             loginPanel.style.display = 'none';
             userPanel.style.display = 'flex';
@@ -1331,32 +1109,25 @@
             currentUserName.textContent = currentUser;
             currentUserId.textContent = myUserId;
             
-            // Обновляем аватар
             updateProfileAvatar();
         }
         
-        // Обновление аватара профиля
         function updateProfileAvatar() {
             if (currentUser && currentUser.length > 0) {
                 profileAvatarText.textContent = currentUser.charAt(0).toUpperCase();
             }
         }
         
-        // ОТКРЫТИЕ ПРОФИЛЯ
         profileBtn.addEventListener('click', openProfile);
         profileCloseBtn.addEventListener('click', closeProfile);
         profileCancelBtn.addEventListener('click', closeProfile);
         
-        // Открыть профиль
         function openProfile() {
-            // Заполняем данные профиля
             profileNameInput.value = currentUser;
             profileUserId.textContent = myUserId;
             
-            // Обновляем статус онлайн/оффлайн
             updateOnlineStatus();
             
-            // Обновляем дату создания аккаунта
             if (myUserData && myUserData.createdAt) {
                 const createdDate = new Date(myUserData.createdAt);
                 profileCreatedAt.textContent = createdDate.toLocaleDateString('ru-RU', {
@@ -1370,21 +1141,17 @@
                 profileCreatedAt.textContent = 'Неизвестно';
             }
             
-            // Сбрасываем статус сообщений
             profileStatus.className = 'profile-status';
             profileStatus.style.display = 'none';
             
-            // Показываем модальное окно
             profileModal.style.display = 'flex';
             profileNameInput.focus();
         }
         
-        // Закрыть профиль
         function closeProfile() {
             profileModal.style.display = 'none';
         }
         
-        // Обновление статуса онлайн
         function updateOnlineStatus() {
             if (myUserData && myUserData.lastSeen) {
                 const lastSeenTime = myUserData.lastSeen;
@@ -1392,12 +1159,10 @@
                 const diffMinutes = Math.floor((currentTime - lastSeenTime) / 60000);
                 
                 if (diffMinutes < 3) {
-                    // Онлайн (был в сети менее 3 минут назад)
                     profileStatusText.textContent = 'В сети';
                     lastSeenBadge.textContent = 'онлайн';
                     lastSeenBadge.className = 'last-seen-status last-seen-online';
                 } else {
-                    // Оффлайн
                     profileStatusText.textContent = 'Был в сети ' + getLastSeenText(lastSeenTime);
                     lastSeenBadge.textContent = 'оффлайн';
                     lastSeenBadge.className = 'last-seen-status last-seen-offline';
@@ -1409,10 +1174,8 @@
             }
         }
         
-        // СОХРАНЕНИЕ ПРОФИЛЯ
         profileSaveBtn.addEventListener('click', saveProfile);
         
-        // Сохранение профиля
         function saveProfile() {
             const newUsername = profileNameInput.value.trim();
             
@@ -1431,33 +1194,24 @@
                 return;
             }
             
-            // Сохраняем новое имя
             const oldUsername = currentUser;
             currentUser = newUsername;
             
-            // Обновляем в интерфейсе
             currentUserName.textContent = newUsername;
             updateProfileAvatar();
             
-            // Обновляем в LocalStorage
             localStorage.setItem(STORAGE_KEYS.USER_NAME, newUsername);
             
-            // Обновляем в Firebase
             database.ref(`users/${myUserId}/username`).set(newUsername)
                 .then(() => {
-                    // Обновляем данные пользователя
                     myUserData.username = newUsername;
                     
-                    // Показываем успешное сообщение
                     showProfileStatus('Имя успешно обновлено!', 'success');
                     
-                    // Обновляем все сообщения с нашим старым именем
                     updateMessagesWithNewUsername(oldUsername, newUsername);
                     
-                    // Уведомляем контактов об изменении имени
                     notifyContactsAboutNameChange(newUsername);
                     
-                    // Закрываем профиль через 2 секунды
                     setTimeout(() => {
                         closeProfile();
                     }, 2000);
@@ -1465,20 +1219,17 @@
                 .catch(error => {
                     console.error('Ошибка обновления имени:', error);
                     showProfileStatus('Ошибка обновления имени', 'error');
-                    // Возвращаем старое имя
                     currentUser = oldUsername;
                     currentUserName.textContent = oldUsername;
                     updateProfileAvatar();
                 });
         }
         
-        // Показать статус в профиле
         function showProfileStatus(message, type) {
             profileStatus.textContent = message;
             profileStatus.className = `profile-status ${type}`;
             profileStatus.style.display = 'block';
             
-            // Автоматически скрываем через 5 секунд
             if (type === 'success') {
                 setTimeout(() => {
                     profileStatus.style.display = 'none';
@@ -1486,13 +1237,10 @@
             }
         }
         
-        // Обновить все сообщения с новым именем
         function updateMessagesWithNewUsername(oldUsername, newUsername) {
-            // Для каждого контакта обновляем наши сообщения
             Object.keys(contacts).forEach(friendId => {
                 const chatId = getChatId(friendId);
                 
-                // Находим и обновляем все наши сообщения в этом чате
                 database.ref(`private_messages/${chatId}`).once('value').then(snapshot => {
                     const messages = snapshot.val();
                     if (!messages) return;
@@ -1500,7 +1248,6 @@
                     Object.keys(messages).forEach(messageId => {
                         const message = messages[messageId];
                         if (message.senderId === myUserId && message.senderName === oldUsername) {
-                            // Обновляем имя отправителя
                             database.ref(`private_messages/${chatId}/${messageId}/senderName`).set(newUsername);
                         }
                     });
@@ -1508,10 +1255,8 @@
             });
         }
         
-        // Уведомить контакты об изменении имени
         function notifyContactsAboutNameChange(newUsername) {
             Object.keys(contacts).forEach(friendId => {
-                // Отправляем системное сообщение об изменении имени
                 const messageData = {
                     senderId: 'system',
                     senderName: 'Система',
@@ -1526,46 +1271,34 @@
             });
         }
         
-        // Удаление аккаунта
         deleteAccountBtn.addEventListener('click', () => {
             confirmationModal.style.display = 'flex';
         });
         
-        // Подтверждение удаления аккаунта
         confirmDeleteBtn.addEventListener('click', deleteAccount);
         
-        // Отмена удаления аккаунта
         cancelDeleteBtn.addEventListener('click', () => {
             confirmationModal.style.display = 'none';
         });
         
-        // Функция удаления аккаунта
         function deleteAccount() {
             showLoading();
             
-            // 1. Удалить все чаты пользователя
             deleteAllUserChats();
             
-            // 2. Удалить пользователя из контактов его друзей
             deleteUserFromFriendsContacts();
             
-            // 3. Удалить контакты пользователя
             database.ref(`contacts/${myUserId}`).remove();
             
-            // 4. Удалить пользователя
             database.ref(`users/${myUserId}`).remove()
                 .then(() => {
-                    // 5. Удалить данные из LocalStorage
                     clearLocalStorage();
                     
-                    // 6. Сбросить состояние приложения
                     resetAppState();
                     
-                    // 7. Скрыть окно подтверждения и загрузки
                     confirmationModal.style.display = 'none';
                     hideLoading();
                     
-                    // 8. Показать форму входа
                     loginPanel.style.display = 'block';
                     userPanel.style.display = 'none';
                     profileBtn.style.display = 'none';
@@ -1581,45 +1314,36 @@
                 });
         }
         
-        // Удалить все чаты пользователя
         function deleteAllUserChats() {
-            // Получить все ID чатов, в которых участвует пользователь
             Object.keys(contacts).forEach(friendId => {
                 const chatId = getChatId(friendId);
                 database.ref(`private_messages/${chatId}`).remove();
             });
         }
         
-        // Удалить пользователя из контактов его друзей
         function deleteUserFromFriendsContacts() {
             Object.keys(contacts).forEach(friendId => {
                 database.ref(`contacts/${friendId}/${myUserId}`).remove();
             });
         }
         
-        // Очистить LocalStorage
         function clearLocalStorage() {
             localStorage.removeItem(STORAGE_KEYS.USER_ID);
             localStorage.removeItem(STORAGE_KEYS.USER_NAME);
             localStorage.removeItem(STORAGE_KEYS.CONTACTS);
         }
         
-        // Сбросить состояние приложения
         function resetAppState() {
-            // Отключить все слушатели
             Object.keys(chatListeners).forEach(chatId => {
                 database.ref(`private_messages/${chatId}`).off('child_added', chatListeners[chatId]);
             });
             
-            // Отписаться от всех контактов
             Object.keys(contacts).forEach(userId => {
                 database.ref(`users/${userId}`).off();
             });
             
-            // Отписаться от списка контактов
             database.ref(`contacts/${myUserId}`).off();
             
-            // Сбросить состояние
             currentUser = null;
             myUserId = null;
             myUserData = null;
@@ -1630,20 +1354,16 @@
             unreadMessages = {};
             chatListeners = {};
             
-            // Деактивировать поле ввода сообщений
             messageInput.disabled = true;
             sendBtn.disabled = true;
             
-            // Очистить списки
             contactsList.innerHTML = '<div class="empty-chat">Добавьте друга по ID</div>';
             chatMessages.innerHTML = '<div class="empty-chat">Выберите контакт для начала общения</div>';
         }
         
-        // Копировать ID
         copyIdBtn.addEventListener('click', () => {
             const textToCopy = myUserId;
             
-            // Создаем временный textarea элемент
             const textarea = document.createElement('textarea');
             textarea.value = textToCopy;
             textarea.style.position = 'fixed';
@@ -1655,27 +1375,21 @@
             textarea.select();
             
             try {
-                // Пробуем использовать современный API
                 const successful = document.execCommand('copy');
                 if (successful) {
                     showNotification('ID скопирован в буфер обмена!');
                 } else {
-                    // Если не сработало, используем старый метод
                     copyUsingOldMethod(textToCopy);
                 }
             } catch (err) {
-                // Если execCommand не поддерживается
                 copyUsingOldMethod(textToCopy);
             }
             
-            // Удаляем временный элемент
             document.body.removeChild(textarea);
         });
         
-        // Старый метод копирования
         function copyUsingOldMethod(text) {
             try {
-                // Пробуем использовать современный Clipboard API
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(text).then(() => {
                         showNotification('ID скопирован! Поделитесь им с друзьями');
@@ -1690,9 +1404,7 @@
             }
         }
         
-        // Фолбэк копирование
         function fallbackCopy(text) {
-            // Создаем временный элемент input
             const input = document.createElement('input');
             input.style.position = 'fixed';
             input.style.opacity = 0;
@@ -1712,7 +1424,6 @@
             document.body.removeChild(input);
         }
         
-        // Добавить друга
         addFriendBtn.addEventListener('click', addFriend);
         friendIdInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -1720,7 +1431,6 @@
             }
         });
         
-        // Отправка сообщения
         sendBtn.addEventListener('click', sendMessage);
         messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -1729,7 +1439,6 @@
             }
         });
         
-        // Генерация короткого ID (до 8 символов)
         function generateShortId() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let result = '';
@@ -1739,18 +1448,15 @@
             return result;
         }
         
-        // Сохранение пользователя в LocalStorage
         function saveUserToLocalStorage() {
             localStorage.setItem(STORAGE_KEYS.USER_ID, myUserId);
             localStorage.setItem(STORAGE_KEYS.USER_NAME, currentUser);
         }
         
-        // Сохранение контактов в LocalStorage
         function saveContactsToLocalStorage() {
             localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
         }
         
-        // Загрузка контактов из LocalStorage
         function loadContactsFromLocalStorage() {
             const savedContacts = localStorage.getItem(STORAGE_KEYS.CONTACTS);
             if (savedContacts) {
@@ -1763,7 +1469,6 @@
             return {};
         }
         
-        // Сохранение пользователя в Firebase
         function saveUserToFirebase() {
             myUserData = {
                 username: currentUser,
@@ -1774,7 +1479,6 @@
             
             database.ref(`users/${myUserId}`).set(myUserData);
             
-            // Обновлять время последней активности каждую минуту
             setInterval(() => {
                 if (myUserData) {
                     database.ref(`users/${myUserId}/lastSeen`).set(Date.now());
@@ -1782,34 +1486,24 @@
             }, 60000);
         }
         
-        // Загрузка контактов
         function loadContacts() {
-            // Сначала загружаем из LocalStorage
             contacts = loadContactsFromLocalStorage();
             
-            // Затем подписываемся на обновления из Firebase
             database.ref(`contacts/${myUserId}`).on('value', (snapshot) => {
                 const firebaseContacts = snapshot.val() || {};
                 
-                // Объединяем контакты из LocalStorage и Firebase
-                // Предпочтение отдается Firebase, так как там актуальные данные
                 contacts = { ...contacts, ...firebaseContacts };
                 
-                // Сохраняем объединенные контакты обратно в LocalStorage
                 saveContactsToLocalStorage();
                 
-                // Загрузить информацию о пользователях-контактах
                 loadContactUsers();
                 
-                // Обновить список контактов
                 updateContactsList();
                 
-                // Подписаться на чаты с контактами
                 subscribeToContactChats();
             });
         }
         
-        // Загрузка информации о пользователях-контактах
         function loadContactUsers() {
             Object.keys(contacts).forEach(userId => {
                 database.ref(`users/${userId}`).on('value', (snapshot) => {
@@ -1822,7 +1516,6 @@
             });
         }
         
-        // Обновление списка контактов
         function updateContactsList() {
             contactsList.innerHTML = '';
             
@@ -1846,30 +1539,83 @@
                         <div class="contact-name">${escapeHtml(displayName)}</div>
                         <div class="contact-id">ID: ${userId}</div>
                         ${lastSeen ? `<div style="font-size: 9px; color: #888;">${lastSeen}</div>` : ''}
+                        <button class="remove-friend-btn" data-user-id="${userId}">Убрать друга</button>
                     </div>
                     ${unreadCount > 0 ? `<div class="new-message-indicator">${unreadCount}</div>` : ''}
                 `;
                 
-                contactItem.addEventListener('click', () => {
-                    openChat(userId);
+                contactItem.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('remove-friend-btn')) {
+                        openChat(userId);
+                    }
+                });
+                
+                const removeBtn = contactItem.querySelector('.remove-friend-btn');
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeFriend(userId);
                 });
                 
                 contactsList.appendChild(contactItem);
             });
         }
         
-        // Подписаться на чаты с контактами
+        function removeFriend(friendId) {
+            if (!confirm(`Вы уверены, что хотите удалить ${users[friendId]?.username || 'этого пользователя'} из контактов?`)) {
+                return;
+            }
+            
+            showLoading();
+            
+            delete contacts[friendId];
+            
+            saveContactsToLocalStorage();
+            
+            database.ref(`contacts/${myUserId}/${friendId}`).remove()
+                .then(() => {
+                    database.ref(`contacts/${friendId}/${myUserId}`).remove()
+                        .then(() => {
+                            delete unreadMessages[friendId];
+                            
+                            const chatId = getChatId(friendId);
+                            if (chatListeners[chatId]) {
+                                database.ref(`private_messages/${chatId}`).off('child_added', chatListeners[chatId]);
+                                delete chatListeners[chatId];
+                            }
+                            
+                            if (currentChatWith === friendId) {
+                                currentChatWith = null;
+                                messageInput.disabled = true;
+                                sendBtn.disabled = true;
+                                chatMessages.innerHTML = '<div class="empty-chat">Выберите контакт для начала общения</div>';
+                            }
+                            
+                            updateContactsList();
+                            hideLoading();
+                            showNotification('Контакт удален');
+                        })
+                        .catch(error => {
+                            console.error('Ошибка удаления из контактов друга:', error);
+                            hideLoading();
+                            alert('Ошибка удаления контакта');
+                        });
+                })
+                .catch(error => {
+                    console.error('Ошибка удаления контакта:', error);
+                    hideLoading();
+                    alert('Ошибка удаления контакта');
+                });
+        }
+        
         function subscribeToContactChats() {
             Object.keys(contacts).forEach(userId => {
                 subscribeToChat(userId);
             });
         }
         
-        // Подписаться на чат с пользователем
         function subscribeToChat(otherUserId) {
             const chatId = getChatId(otherUserId);
             
-            // Если уже есть слушатель для этого чата, не создаем новый
             if (chatListeners[chatId]) {
                 return;
             }
@@ -1878,14 +1624,11 @@
                 const message = snapshot.val();
                 const messageId = snapshot.key;
                 
-                // Пропускаем если это наше сообщение
                 if (message.senderId === myUserId) {
                     return;
                 }
                 
-                // Если чат открыт - отображаем сообщение
                 if (currentChatWith === otherUserId) {
-                    // Проверяем, не отображали ли уже это сообщение
                     if (messageId === lastLoadedMessageId) {
                         return;
                     }
@@ -1893,16 +1636,13 @@
                     displayMessage(message);
                     lastLoadedMessageId = messageId;
                     
-                    // Прокручиваем вниз
                     setTimeout(() => {
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }, 50);
                 } else {
-                    // Если чат не открыт - увеличиваем счетчик непрочитанных
                     unreadMessages[otherUserId] = (unreadMessages[otherUserId] || 0) + 1;
                     updateContactsList();
                     
-                    // Показать уведомление
                     showNotification(`Новое сообщение от ${users[otherUserId]?.username || 'пользователя'}`);
                 }
             });
@@ -1910,7 +1650,6 @@
             chatListeners[chatId] = listener;
         }
         
-        // Добавление друга
         function addFriend() {
             const friendId = friendIdInput.value.trim();
             if (!friendId) {
@@ -1918,7 +1657,6 @@
                 return;
             }
             
-            // Проверка длины ID
             if (friendId.length > 8) {
                 alert('ID должен быть не более 8 символов');
                 return;
@@ -1936,23 +1674,18 @@
                 return;
             }
             
-            // Проверить существование пользователя
             database.ref(`users/${friendId}`).once('value').then((snapshot) => {
                 if (snapshot.exists()) {
-                    // Добавить в контакты
                     contacts[friendId] = {
                         addedAt: Date.now()
                     };
                     
-                    // Сохранить в LocalStorage
                     saveContactsToLocalStorage();
                     
-                    // Сохранить в Firebase
                     database.ref(`contacts/${myUserId}/${friendId}`).set({
                         addedAt: Date.now()
                     });
                     
-                    // Также добавить себя в контакты друга
                     database.ref(`contacts/${friendId}/${myUserId}`).set({
                         addedAt: Date.now()
                     });
@@ -1960,10 +1693,8 @@
                     friendIdInput.value = '';
                     showNotification('Друг добавлен!');
                     
-                    // Подписаться на чат с новым другом
                     subscribeToChat(friendId);
                     
-                    // Открыть чат с новым другом
                     openChat(friendId);
                 } else {
                     alert('Пользователь с таким ID не найден');
@@ -1975,18 +1706,15 @@
             });
         }
         
-        // Открыть чат с пользователем
         function openChat(userId) {
             if (currentChatWith === userId) return;
             
             currentChatWith = userId;
             lastLoadedMessageId = null;
             
-            // Сбросить счетчик непрочитанных для этого чата
             unreadMessages[userId] = 0;
             updateContactsList();
             
-            // Обновить активный контакт
             document.querySelectorAll('.contact-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.userId === userId) {
@@ -1994,23 +1722,19 @@
                 }
             });
             
-            // Активировать поле ввода
             messageInput.disabled = false;
             sendBtn.disabled = false;
             messageInput.focus();
             
-            // Загрузить историю сообщений
             loadChatHistory(userId);
         }
         
-        // Получить ID чата (уникальный для пары пользователей)
         function getChatId(otherUserId) {
             if (!otherUserId) return null;
             const ids = [myUserId, otherUserId].sort();
             return ids.join('_');
         }
         
-        // Загрузить историю сообщений
         function loadChatHistory(otherUserId) {
             const chatId = getChatId(otherUserId);
             
@@ -2026,24 +1750,19 @@
                     return;
                 }
                 
-                // Получаем ключи сообщений
                 const messageIds = Object.keys(messages);
                 
-                // Преобразуем объект в массив и сортируем по времени
                 const messagesArray = Object.values(messages);
                 messagesArray.sort((a, b) => a.timestamp - b.timestamp);
                 
-                // Отображаем историю сообщений
                 messagesArray.forEach((message, index) => {
                     displayMessage(message);
                     
-                    // Запоминаем ID последнего сообщения
                     if (index === messagesArray.length - 1) {
                         lastLoadedMessageId = messageIds[index];
                     }
                 });
                 
-                // Прокручиваем вниз
                 setTimeout(() => {
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }, 100);
@@ -2053,7 +1772,6 @@
             });
         }
         
-        // Отправка сообщения
         function sendMessage() {
             if (isSending || !currentChatWith || !messageInput.value.trim()) return;
             
@@ -2075,7 +1793,6 @@
             
             const chatId = getChatId(currentChatWith);
             
-            // Добавить сообщение локально сразу
             displayMessage({
                 senderId: myUserId,
                 senderName: currentUser,
@@ -2083,14 +1800,11 @@
                 timestamp: messageData.timestamp
             });
             
-            // Добавить сообщение в Firebase
             database.ref(`private_messages/${chatId}`).push(messageData)
                 .then(() => {
-                    // Успешно отправлено
                     messageInput.value = '';
                     messageInput.focus();
                     
-                    // Прокручиваем вниз
                     setTimeout(() => {
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }, 50);
@@ -2106,9 +1820,7 @@
                 });
         }
         
-        // Отображение сообщения
         function displayMessage(message) {
-            // Убираем сообщение "Начните общение"
             if (chatMessages.querySelector('.empty-chat')) {
                 chatMessages.innerHTML = '';
             }
@@ -2116,7 +1828,6 @@
             const messageDiv = document.createElement('div');
             const isMyMessage = message.senderId === myUserId;
             
-            // Форматируем время
             const date = new Date(message.timestamp);
             const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
@@ -2130,7 +1841,6 @@
             chatMessages.appendChild(messageDiv);
         }
         
-        // Получить текст "был в сети"
         function getLastSeenText(lastSeen) {
             if (!lastSeen) return '';
             
@@ -2147,20 +1857,17 @@
             return `${days} дн назад`;
         }
         
-        // Экранирование HTML
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
         
-        // Показать уведомление
         function showNotification(text) {
             notification.innerHTML = `<strong>${escapeHtml(text)}</strong>`;
             notification.style.display = 'block';
             notification.classList.add('blink');
             
-            // Воспроизвести звук уведомления
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
@@ -2181,26 +1888,22 @@
                 console.log("Аудио не поддерживается");
             }
             
-            // Скрыть уведомление через 5 секунд
             setTimeout(() => {
                 notification.style.display = 'none';
                 notification.classList.remove('blink');
             }, 5000);
         }
         
-        // Обработка видимости страницы для уведомлений
         document.addEventListener('visibilitychange', function() {
             if (!document.hidden) {
                 notification.style.display = 'none';
                 notification.classList.remove('blink');
-                // Обновляем статус при возвращении на вкладку
                 if (myUserData) {
                     updateOnlineStatus();
                 }
             }
         });
         
-        // Обновление статуса онлайн каждые 30 секунд
         setInterval(() => {
             if (myUserData) {
                 updateOnlineStatus();
